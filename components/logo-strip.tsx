@@ -45,10 +45,15 @@ export function LogoStrip() {
       </div>
 
       <style>{`
-        @keyframes logo-scroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
+       
+       @keyframes logo-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
         .animate-logo-scroll {
           animation: logo-scroll 28s linear infinite;
         }
