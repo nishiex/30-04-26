@@ -16,6 +16,7 @@ const track = [...logos, ...logos]
 
 export function LogoStrip() {
   return (
+  <div className="relative w-full overflow-hidden  [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
     <section
       id="s-logos"
       data-sec="logos"
@@ -61,5 +62,6 @@ export function LogoStrip() {
         }
       `}</style>
     </section>
+  </div>
   )
 }
