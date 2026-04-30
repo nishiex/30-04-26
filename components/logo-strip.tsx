@@ -24,7 +24,7 @@ export function LogoStrip() {
       className="bg-[#ffffff] py-6 overflow-hidden"
     >
       <div
-        className="flex gap-12 items-center w-max animate-logo-scroll"
+        className="flex w-max gap-12 animate-logo-scroll"
         aria-hidden="true"
       >
         {track.map((logo, i) => (
