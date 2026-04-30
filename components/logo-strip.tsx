@@ -55,8 +55,8 @@ export function LogoStrip() {
   }
 }
         .animate-logo-scroll {
-          animation: logo-scroll 28s linear infinite;
-        }
+  animation: logo-scroll 25s linear infinite;
+}
         .animate-logo-scroll:hover {
           animation-play-state: paused;
         }
