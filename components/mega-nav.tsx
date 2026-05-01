@@ -10,6 +10,7 @@ import {
   ShoppingBag, Package, Landmark, LayoutGrid,
   Info, Newspaper, BookOpen, LifeBuoy, FileText, Video,
   Lightbulb, Award,
+  Icon,
 } from "lucide-react"
 
 type MenuKey = "product" | "solutions" | "company" | "resources" | null
@@ -57,7 +58,7 @@ const solutionsByIndustry = [
 const solutionsByRole = [
   { title: "Sales Teams", Icon: Users, href: "/solutions/sales" },
   { title: "Remote Teams", Icon: UserCheck, href: "/solutions/remote" },
-
+  {  title:"Saas",  Icon:Cloud, href:"/solutions/saas"},
 ]
 
 /* ─── Company data ────────────────────────────────────────────── */
