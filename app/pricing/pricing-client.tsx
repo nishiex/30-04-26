@@ -247,7 +247,7 @@ function BillingToggle({
               {label === "Annually" && (
                 <motion.span
                   animate={{ opacity: isAnnual ? 1 : 0.45, scale: isAnnual ? 1 : 0.85 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.1 }}
                   className="relative z-10 text-[10px] bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded-full leading-none"
                 >
                   -20%
