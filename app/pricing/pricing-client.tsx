@@ -218,43 +218,43 @@ function BillingToggle({
   isAnnual: boolean
   onToggle: () => void
 }) {
+  const tabs = [
+    { label: "Monthly", value: false },
+    { label: "Annually", value: true },
+  ]
+
   return (
     <div className="flex items-center justify-center mt-7">
-      <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-0">
-        {/* Sliding active background */}
-        <motion.div
-          className="absolute top-1 bottom-1 rounded-full bg-white shadow-sm"
-          animate={{
-            left: isAnnual ? "calc(40% + 2px)" : "4px",
-            right: isAnnual ? "4px" : "calc(60% + 2px)",
-          }}
-          transition={{ type: "spring", stiffness: 460, damping: 34 }}
-        />
-
-        {/* Monthly tab */}
-        <button
-          onClick={() => isAnnual && onToggle()}
-          className="relative z-10 px-5 py-1.5 rounded-full font-mono text-[13px] font-semibold transition-colors duration-200 cursor-pointer"
-          style={{ color: !isAnnual ? "#111827" : "#9ca3af" }}
-        >
-          Monthly
-        </button>
-
-        {/* Annually tab */}
-        <button
-          onClick={() => !isAnnual && onToggle()}
-          className="relative z-10 px-5 py-1.5 rounded-full font-mono text-[13px] font-semibold transition-colors duration-200 cursor-pointer flex items-center gap-1.5"
-          style={{ color: isAnnual ? "#111827" : "#9ca3af" }}
-        >
-          Annually
-          <motion.span
-            animate={{ opacity: isAnnual ? 1 : 0.4, scale: isAnnual ? 1 : 0.85 }}
-            transition={{ duration: 0.2 }}
-            className="text-[10px] bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded-full leading-none"
-          >
-            -20%
-          </motion.span>
-        </button>
+      <div className="relative flex items-center bg-gray-100 rounded-full p-1">
+        {tabs.map(({ label, value }) => {
+          const active = isAnnual === value
+          return (
+            <button
+              key={label}
+              onClick={() => !active && onToggle()}
+              className="relative z-10 px-5 py-1.5 rounded-full font-mono text-[13px] font-semibold flex items-center gap-1.5 cursor-pointer"
+              style={{ color: active ? "#111827" : "#9ca3af" }}
+            >
+              {active && (
+                <motion.div
+                  layoutId="billing-pill"
+                  className="absolute inset-0 rounded-full bg-white shadow-sm"
+                  transition={{ type: "spring", stiffness: 500, damping: 36 }}
+                />
+              )}
+              <span className="relative z-10">{label}</span>
+              {label === "Annually" && (
+                <motion.span
+                  animate={{ opacity: isAnnual ? 1 : 0.45, scale: isAnnual ? 1 : 0.85 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative z-10 text-[10px] bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded-full leading-none"
+                >
+                  -20%
+                </motion.span>
+              )}
+            </button>
+          )
+        })}
       </div>
     </div>
   )
