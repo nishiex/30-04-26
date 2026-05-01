@@ -1,21 +1,44 @@
-import { Metadata } from "next"
+"use client"
+
+// ⚠️ Metadata: move to app/pricing/layout.tsx (can't export from "use client"):
+// export const metadata = {
+//   title: "Twiching Pricing · Starter $7.99 | Professional $15.99 | Enterprise $25.99",
+//   description: "Three plans. 14-day free trial. Starter from $7.99/mo billed annually.",
+// }
+
+import { useState, useEffect, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { PageLayout } from "@/components/page-layout"
 import { TrustBar, SectionHeading } from "@/components/page-parts"
-import { Faq } from "@/components/faq"
-import { Check, Minus, ArrowRight } from "lucide-react"
+import { Check, Minus, ArrowRight, ChevronDown } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "Twiching Pricing · Starter $7.99 | Professional $15.99 | Enterprise $25.99",
-  description: "Three plans. 14-day free trial. Starter from $7.99/mo (billed annually). Virtual numbers, voice, omnichannel, AI. Credit card required.",
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger)
 }
 
-const PLANS = [
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+type Plan = {
+  name: string
+  annualPrice: string
+  monthlyPrice: string
+  period: string
+  best: string
+  highlight: boolean
+  highlights: string[]
+  features: Record<string, boolean>
+}
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const PLANS: Plan[] = [
   {
     name: "Starter",
-    price: "$7.99",
+    annualPrice: "$7.99",
     monthlyPrice: "$12.99",
     period: "/user/mo",
-    billingNote: "billed annually · $12.99/mo monthly",
     best: "Freelancers, consultants, small teams",
     highlight: false,
     highlights: [
@@ -50,10 +73,9 @@ const PLANS = [
   },
   {
     name: "Professional",
-    price: "$15.99",
+    annualPrice: "$15.99",
     monthlyPrice: "$19.99",
     period: "/user/mo",
-    billingNote: "billed annually · $19.99/mo monthly",
     best: "Growing businesses",
     highlight: true,
     highlights: [
@@ -88,10 +110,9 @@ const PLANS = [
   },
   {
     name: "Enterprise",
-    price: "$25.99",
+    annualPrice: "$25.99",
     monthlyPrice: "$29.99",
     period: "/user/mo",
-    billingNote: "billed annually · $29.99/mo monthly",
     best: "Contact centers, large teams",
     highlight: false,
     highlights: [
@@ -157,58 +178,360 @@ const TRIAL_INCLUDES = [
   "Login: up to 2 desktop + 1 phone per user",
 ]
 
+const TRIAL_LIMITS = [
+  { label: "No external calls or SMS during trial", desc: "Compliance verification required to activate. Takes minutes." },
+  { label: "Credit card required at sign-up", desc: "No charges during the 14-day trial window." },
+  { label: "Auto-converts after 14 days", desc: "Converts to the plan you selected at signup." },
+  { label: "Cancel anytime before trial ends", desc: "No charge. Redirected to plans page." },
+]
+
 const FAQS = [
   { q: "What's included in the 14-day free trial?", a: "Up to 3 users, one phone number per user, unlimited internal calls, video conferencing, and team messaging. External calls and SMS activate after compliance verification." },
   { q: "Is a credit card required?", a: "Yes. Card required at sign-up. No charges during the 14-day trial window. Auto-converts to paid plan after 14 days." },
   { q: "Can I cancel during the trial?", a: "Yes. Cancel anytime before trial ends — redirected to plans page with no charge." },
   { q: "Why can't I make external calls during the trial?", a: "Compliance keeps the platform compliant with carrier rules and protects your number reputation from day one. Activation takes minutes once verified." },
-  { q: "What does 'unlimited US/Canada calling' mean?", a: "All paid plans include unlimited domestic US/Canada calling with a fair-use policy (standard industry cap applies). No per-minute charges for normal business use." },
-  { q: "What AI Receptionist minutes are included?", a: "Starter includes 25 free AI Receptionist minutes/mo, Professional 100 min/mo, and Enterprise 300 min/mo — all pooled per account. Overage at $0.15/min." },
+  { q: "What does 'unlimited US/Canada calling' mean?", a: "All paid plans include unlimited domestic US/Canada calling with a fair-use policy. No per-minute charges for normal business use." },
+  { q: "What AI Receptionist minutes are included?", a: "Starter 25 min/mo, Professional 100 min/mo, Enterprise 300 min/mo — pooled per account. Overage at $0.15/min." },
   { q: "Do you offer custom pricing?", a: "Yes. Contact us for high-volume or enterprise arrangements beyond the standard plans." },
 ]
 
+// ── Framer Motion variants ────────────────────────────────────────────────────
+
+const heroVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.12, duration: 0.55, ease: "easeOut" },
+  }),
+}
+
+const cardContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.14, delayChildren: 0.05 } },
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 44 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function BillingToggle({
+  isAnnual,
+  onToggle,
+}: {
+  isAnnual: boolean
+  onToggle: () => void
+}) {
+  return (
+    <div className="flex items-center justify-center gap-3 mt-7 select-none">
+      <span
+        onClick={() => isAnnual && onToggle()}
+        className={`font-mono text-[13px] cursor-pointer transition-colors duration-200 ${
+          !isAnnual ? "text-gray-900 font-bold" : "text-gray-400"
+        }`}
+      >
+        Monthly
+      </span>
+
+      <button
+        onClick={onToggle}
+        role="switch"
+        aria-checked={isAnnual}
+        aria-label="Toggle annual billing"
+        className="relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+        style={{ backgroundColor: isAnnual ? "#2563eb" : "#d1d5db" }}
+      >
+        <motion.span
+          className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm block"
+          animate={{ x: isAnnual ? 20 : 0 }}
+          transition={{ type: "spring", stiffness: 520, damping: 32 }}
+        />
+      </button>
+
+      <span
+        onClick={() => !isAnnual && onToggle()}
+        className={`font-mono text-[13px] cursor-pointer flex items-center gap-1.5 transition-colors duration-200 ${
+          isAnnual ? "text-gray-900 font-bold" : "text-gray-400"
+        }`}
+      >
+        Annual
+        <motion.span
+          animate={{ opacity: isAnnual ? 1 : 0.4, scale: isAnnual ? 1 : 0.85 }}
+          transition={{ duration: 0.25 }}
+          className="text-[10px] bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded-full leading-none"
+        >
+          Save 20%
+        </motion.span>
+      </span>
+    </div>
+  )
+}
+
+function PriceDisplay({
+  plan,
+  isAnnual,
+}: {
+  plan: Plan
+  isAnnual: boolean
+}) {
+  const price = isAnnual ? plan.annualPrice : plan.monthlyPrice
+  const note = isAnnual
+    ? `billed annually · ${plan.monthlyPrice}/mo monthly`
+    : `billed monthly · save with annual`
+
+  return (
+    <div className="mb-2">
+      <div className="flex items-end gap-1 mb-0.5">
+        {/* Fixed-width container prevents layout jump on price change */}
+        <div className="relative overflow-hidden" style={{ height: 44, minWidth: 96 }}>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={price}
+              initial={{ y: isAnnual ? -36 : 36, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: isAnnual ? 36 : -36, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 360, damping: 30 }}
+              className="font-serif text-[36px] font-bold text-gray-900 leading-none absolute bottom-0 left-0"
+            >
+              {price}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+        <span className="font-mono text-[11px] text-gray-400 pb-1.5">{plan.period}</span>
+      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.p
+          key={note}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.18 }}
+          className="font-mono text-[10px] text-gray-400"
+        >
+          {note}
+        </motion.p>
+      </AnimatePresence>
+    </div>
+  )
+}
+
+function FaqItem({
+  item,
+  index,
+  isOpen,
+  onToggle,
+}: {
+  item: { q: string; a: string }
+  index: number
+  isOpen: boolean
+  onToggle: () => void
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.06, duration: 0.42 }}
+      className="border border-gray-100 rounded-xl overflow-hidden"
+    >
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between px-5 py-4 text-left bg-white hover:bg-gray-50/60 transition-colors"
+      >
+        <span className="font-mono font-bold text-[13px] text-gray-900 pr-4">{item.q}</span>
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
+          className="flex-shrink-0 text-gray-400"
+        >
+          <ChevronDown className="h-4 w-4" />
+        </motion.span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{
+              height: { duration: 0.32, ease: [0.04, 0.62, 0.23, 0.98] },
+              opacity: { duration: 0.22 },
+            }}
+            className="overflow-hidden border-t border-gray-50"
+          >
+            <p className="px-5 py-4 font-mono text-[13px] text-gray-600 leading-relaxed">
+              {item.a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+// ── Main Page ─────────────────────────────────────────────────────────────────
+
 export default function PricingPage() {
+  const [isAnnual, setIsAnnual] = useState(true)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  const tableBodyRef = useRef<HTMLTableSectionElement>(null)
+  const glowLayerRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const ctx = gsap.context(() => {
+      // ── Table rows: stagger fade+slide on scroll ──
+      if (tableBodyRef.current) {
+        const rows = tableBodyRef.current.querySelectorAll("tr")
+        gsap.set(rows, { opacity: 0, x: -18 })
+        ScrollTrigger.create({
+          trigger: tableBodyRef.current,
+          start: "top 83%",
+          once: true,
+          onEnter: () => {
+            gsap.to(rows, {
+              opacity: 1,
+              x: 0,
+              duration: 0.38,
+              stagger: 0.025,
+              ease: "power2.out",
+            })
+          },
+        })
+      }
+
+      // ── Highlighted card: subtle glow pulse (GSAP loop) ──
+      if (glowLayerRef.current) {
+        gsap.fromTo(
+          glowLayerRef.current,
+          { boxShadow: "0 0 18px 4px rgba(37,99,235,0.12), 0 20px 50px -10px rgba(37,99,235,0.14)" },
+          {
+            boxShadow: "0 0 34px 10px rgba(37,99,235,0.24), 0 24px 60px -10px rgba(37,99,235,0.30)",
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          }
+        )
+      }
+
+      // ── CTA: gradient background drift ──
+      if (ctaRef.current) {
+        gsap.to(ctaRef.current, {
+          backgroundPosition: "100% 50%",
+          duration: 8,
+          repeat: -1,
+          yoyo: true,
+          ease: "none",
+        })
+      }
+    })
+
+    return () => ctx.revert()
+  }, [])
+
   return (
     <PageLayout>
-      {/* Hero */}
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10">
+
+      {/* ── HERO ── */}
+      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6">
         <div className="max-w-[640px]">
-          <h1 className="font-serif text-[42px] sm:text-[52px] font-bold leading-[1.1] text-gray-900 tracking-tight text-balance">
+          <motion.h1
+            custom={0}
+            variants={heroVariants}
+            initial="hidden"
+            animate="visible"
+            className="font-serif text-[42px] sm:text-[52px] font-bold leading-[1.1] text-gray-900 tracking-tight text-balance"
+          >
             Simple pricing. 14-day free trial.
-          </h1>
-          <p className="mt-4 text-[18px] font-mono text-gray-500 leading-relaxed">
+          </motion.h1>
+
+          <motion.p
+            custom={1}
+            variants={heroVariants}
+            initial="hidden"
+            animate="visible"
+            className="mt-4 text-[18px] font-mono text-gray-500 leading-relaxed"
+          >
             Three plans. One free trial. Everything your business needs to communicate professionally.
-          </p>
-          <TrustBar items={["Starter $7.99/mo", "Professional $15.99/mo", "Enterprise $25.99/mo", "14-day trial", "No setup fees"]} />
+          </motion.p>
+
+          <motion.div custom={2} variants={heroVariants} initial="hidden" animate="visible">
+            <TrustBar
+              items={["No setup fees", "Cancel anytime", "SOC 2 ready", "HIPAA compliant", "14-day free trial"]}
+            />
+          </motion.div>
         </div>
+
+        <motion.div custom={3} variants={heroVariants} initial="hidden" animate="visible">
+          <BillingToggle isAnnual={isAnnual} onToggle={() => setIsAnnual((v) => !v)} />
+        </motion.div>
       </section>
 
-      {/* Plan cards */}
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {/* ── PRICING CARDS ── */}
+      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-8">
+        <motion.div
+          variants={cardContainerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-5"
+        >
           {PLANS.map((plan) => (
-            <div
+            <motion.div
               key={plan.name}
+              variants={cardVariants}
               className={`relative rounded-2xl border p-6 flex flex-col ${
                 plan.highlight
-                  ? "border-accent shadow-xl shadow-accent/10 bg-white ring-1 ring-accent/20"
+                  ? "border-accent bg-white ring-1 ring-accent/20 z-10"
                   : "border-gray-100 bg-white"
               }`}
+              whileHover={{
+                scale: plan.highlight ? 1.04 : 1.025,
+                transition: { type: "spring", stiffness: 280, damping: 20 },
+              }}
             >
+              {/* GSAP glow target (absolute overlay, pointer-events-none) */}
               {plan.highlight && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-[10px] font-mono font-bold tracking-[1.5px] uppercase px-4 py-1 rounded-full">
-                  Most popular
-                </span>
+                <div
+                  ref={glowLayerRef}
+                  className="absolute inset-0 rounded-2xl pointer-events-none"
+                />
               )}
-              <p className="font-mono text-[10px] font-bold tracking-[2px] uppercase text-gray-400 mb-3">{plan.best}</p>
-              <div className="flex items-end gap-1 mb-0.5">
-                <span className="font-serif text-[36px] font-bold text-gray-900 leading-none">{plan.price}</span>
-                <span className="font-mono text-[11px] text-gray-400 mb-1.5">{plan.period}</span>
-              </div>
-              <p className="font-mono text-[10px] text-gray-400 mb-1">{plan.billingNote}</p>
-              <p className="font-mono font-bold text-[15px] text-gray-800 mb-4">{plan.name}</p>
 
-              <ul className="space-y-1.5 flex-1 mb-5">
+              {plan.highlight && (
+                <motion.span
+                  initial={{ opacity: 0, y: -10, scale: 0.88 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.55, type: "spring", stiffness: 300, damping: 20 }}
+                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-[10px] font-mono font-bold tracking-[1.5px] uppercase px-4 py-1 rounded-full z-20 shadow-sm"
+                >
+                  Most popular
+                </motion.span>
+              )}
+
+              <p className="font-mono text-[10px] font-bold tracking-[2px] uppercase text-gray-400 mb-3">
+                {plan.best}
+              </p>
+
+              <PriceDisplay plan={plan} isAnnual={isAnnual} />
+
+              <p className="font-mono font-bold text-[15px] text-gray-800 mb-4 mt-1">{plan.name}</p>
+
+              <ul className="space-y-2 flex-1 mb-5">
                 {plan.highlights.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-[12px] font-mono text-gray-700">
                     <Check className="h-3 w-3 text-accent mt-0.5 flex-shrink-0" strokeWidth={2.5} />
@@ -216,51 +539,108 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <p className="text-[11px] font-mono text-gray-400 mb-4 -mt-2">
-                + more · <a href="#comparison" className="underline underline-offset-2 hover:text-accent">see full comparison ↓</a>
+
+              <p className="text-[11px] font-mono text-gray-400 mb-4 -mt-1">
+                + more ·{" "}
+                
+                  href="#comparison"
+                  className="underline underline-offset-2 hover:text-accent transition-colors"
+                >
+                  see full comparison ↓
+                </a>
               </p>
 
-              <a href="/pricing"
-                className={`inline-flex items-center justify-center gap-2 text-[13px] font-semibold font-mono px-5 py-2.5 rounded-full transition-colors ${
+              <motion.a
+                href="https://www.twiching.ai/pricing"
+                className={`group inline-flex items-center justify-center gap-2 text-[13px] font-semibold font-mono px-5 py-2.5 rounded-full transition-colors ${
                   plan.highlight
                     ? "bg-accent text-white hover:bg-blue-700"
                     : "border border-gray-200 text-gray-700 hover:border-accent hover:text-accent"
                 }`}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 420, damping: 22 }}
               >
-                Start Free Trial <ArrowRight className="h-3.5 w-3.5" />
-              </a>
-            </div>
+                Start Free Trial
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </motion.a>
+            </motion.div>
           ))}
-        </div>
-        <p className="text-center font-mono text-[11px] text-gray-400 mt-4">
-          All prices shown are billed annually. Monthly billing available at rates shown on each plan.
-        </p>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="text-center font-mono text-[11px] text-gray-400 mt-4"
+        >
+          Annual prices shown above. Monthly billing available at the rates displayed on each card.
+        </motion.p>
       </section>
 
-      {/* Comparison table */}
-      <section id="comparison" className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
+      {/* ── FEATURE COMPARISON TABLE ── */}
+      <section
+        id="comparison"
+        className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100"
+      >
         <SectionHeading eyebrow="Full comparison" h2="Feature by feature" />
-        <div className="overflow-x-auto rounded-2xl border border-gray-100">
+
+        <div className="overflow-x-auto rounded-2xl border border-gray-100 mt-8">
           <table className="w-full text-[13px] font-mono min-w-[640px]">
-            <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="text-left px-5 py-4 text-[11px] font-bold tracking-[1.5px] uppercase text-gray-400 w-[280px]">Feature</th>
+            <thead className="sticky top-0 z-10">
+              <tr className="border-b border-gray-100 bg-gray-50/95 backdrop-blur-sm">
+                <th className="text-left px-5 py-4 text-[11px] font-bold tracking-[1.5px] uppercase text-gray-400 w-[280px]">
+                  Feature
+                </th>
                 {PLANS.map((p) => (
-                  <th key={p.name} className={`text-center px-5 py-4 text-[12px] font-bold text-gray-800 ${p.highlight ? "text-accent" : ""}`}>
+                  <th
+                    key={p.name}
+                    className={`text-center px-5 py-4 text-[12px] font-bold ${
+                      p.highlight ? "text-accent" : "text-gray-800"
+                    }`}
+                  >
                     {p.name}
-                    <span className="block font-normal text-[10px] text-gray-400">{p.price}/mo</span>
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.span
+                        key={isAnnual ? p.annualPrice : p.monthlyPrice}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="block font-normal text-[10px] text-gray-400 mt-0.5"
+                      >
+                        {isAnnual ? p.annualPrice : p.monthlyPrice}/mo
+                      </motion.span>
+                    </AnimatePresence>
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+
+            {/* GSAP animates these rows on scroll */}
+            <tbody ref={tableBodyRef}>
               {FEATURE_ROWS.map((feature, i) => (
-                <tr key={feature} className={`border-b border-gray-50 ${i % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
+                <tr
+                  key={feature}
+                  className={`border-b border-gray-50 ${i % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}
+                >
                   <td className="px-5 py-3.5 text-gray-700">{feature}</td>
                   {PLANS.map((p) => (
-                    <td key={p.name} className="px-5 py-3.5 text-center">
-                      {p.features[feature as keyof typeof p.features] ? (
-                        <Check className="h-4 w-4 text-accent mx-auto" strokeWidth={2.5} />
+                    <td
+                      key={p.name}
+                      className={`px-5 py-3.5 text-center ${
+                        p.highlight ? "hover:bg-blue-50/25 transition-colors" : ""
+                      }`}
+                    >
+                      {p.features[feature] ? (
+                        <motion.span
+                          className="inline-block"
+                          whileHover={{ scale: 1.28 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                        >
+                          <Check className="h-4 w-4 text-accent" strokeWidth={2.5} />
+                        </motion.span>
                       ) : (
                         <Minus className="h-4 w-4 text-gray-200 mx-auto" strokeWidth={2} />
                       )}
@@ -271,66 +651,146 @@ export default function PricingPage() {
             </tbody>
           </table>
         </div>
-        <p className="font-mono text-[11px] text-gray-400 mt-3 text-center">
-          AI Receptionist free minutes: Starter 25/mo · Professional 100/mo · Enterprise 300/mo (pooled per account). Call recording: Professional basic 30-day · Enterprise advanced 1-year.
-        </p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="font-mono text-[11px] text-gray-400 mt-3 text-center"
+        >
+          AI Receptionist: Starter 25 min/mo · Professional 100 min/mo · Enterprise 300 min/mo (pooled per account).{" "}
+          Call recording: Professional basic 30-day · Enterprise advanced 1-year.
+        </motion.p>
       </section>
 
-      {/* Trial details */}
+      {/* ── TRIAL DETAILS ── */}
       <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
+
+          {/* Left: what's included */}
+          <motion.div
+            initial={{ opacity: 0, x: -44 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
             <SectionHeading eyebrow="14-day trial" h2="What's included in the free trial" />
-            <ul className="space-y-3 mb-6">
-              {TRIAL_INCLUDES.map((item) => (
-                <li key={item} className="flex items-start gap-3 font-mono text-[14px] text-gray-700">
+            <ul className="space-y-3 mt-6">
+              {TRIAL_INCLUDES.map((item, i) => (
+                <motion.li
+                  key={item}
+                  initial={{ opacity: 0, x: -18 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.07, duration: 0.4 }}
+                  className="flex items-start gap-3 font-mono text-[14px] text-gray-700"
+                >
                   <Check className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" strokeWidth={2.5} />
                   {item}
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </div>
-          <div>
+          </motion.div>
+
+          {/* Right: trial limits */}
+          <motion.div
+            initial={{ opacity: 0, x: 44 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          >
             <SectionHeading eyebrow="Good to know" h2="Trial limits" />
-            <div className="space-y-4">
-              {[
-                { label: "No external calls or SMS during trial", desc: "Compliance verification required to activate. Takes minutes." },
-                { label: "Credit card required at sign-up", desc: "No charges during the 14-day trial window." },
-                { label: "Auto-converts after 14 days", desc: "Converts to the plan you selected at signup." },
-                { label: "Cancel anytime before trial ends", desc: "No charge. Redirected to plans page." },
-              ].map(({ label, desc }) => (
-                <div key={label} className="p-5 rounded-xl border border-gray-100 bg-white">
+            <div className="space-y-4 mt-6">
+              {TRIAL_LIMITS.map(({ label, desc }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
+                  whileHover={{ borderColor: "#bfdbfe", backgroundColor: "#eff6ff" }}
+                  className="p-5 rounded-xl border border-gray-100 bg-white transition-colors"
+                >
                   <p className="font-mono font-bold text-[13px] text-gray-900 mb-1">{label}</p>
                   <p className="font-mono text-[12px] text-gray-500">{desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      <Faq />
+      {/* ── FAQ ── */}
+      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
+        <SectionHeading eyebrow="FAQ" h2="Common questions" />
+        <div className="max-w-[720px] mx-auto space-y-2 mt-8">
+          {FAQS.map((item, i) => (
+            <FaqItem
+              key={i}
+              item={item}
+              index={i}
+              isOpen={openFaq === i}
+              onToggle={() => setOpenFaq(openFaq === i ? null : i)}
+            />
+          ))}
+        </div>
+      </section>
 
-      {/* Final CTA */}
-      <section className="bg-accent py-16 mt-8">
+      {/* ── FINAL CTA ── */}
+      <motion.div
+        ref={ctaRef}
+        className="py-16 mt-8"
+        style={{
+          background: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 45%, #4f46e5 100%)",
+          backgroundSize: "200% 200%",
+          backgroundPosition: "0% 50%",
+        }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.55 }}
+      >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="font-serif text-[30px] sm:text-[36px] font-bold text-white mb-3 text-balance">
+          <motion.p
+            className="font-serif text-[30px] sm:text-[36px] font-bold text-white mb-3 text-balance"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+          >
             14 days free. No risk.
-          </p>
-          <p className="font-mono text-[15px] text-white/80 max-w-[520px] mx-auto mb-8 leading-relaxed">
+          </motion.p>
+
+          <motion.p
+            className="font-mono text-[15px] text-white/80 max-w-[520px] mx-auto mb-8 leading-relaxed"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             Start your free trial today. No setup fees, no contracts, cancel anytime.
-          </p>
-          <a
+          </motion.p>
+
+          <motion.a
             href="https://www.twiching.ai/pricing"
-            className="inline-flex items-center gap-2 bg-white text-accent text-[15px] font-semibold font-mono pl-6 pr-3 py-2.5 rounded-full hover:bg-gray-50 transition-colors"
+            className="group inline-flex items-center gap-2 bg-white text-accent text-[15px] font-semibold font-mono pl-6 pr-3 py-2.5 rounded-full"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            whileHover={{ scale: 1.06, boxShadow: "0 14px 36px rgba(0,0,0,0.24)" }}
+            whileTap={{ scale: 0.97 }}
           >
             Start Free Trial
             <span className="grid place-items-center h-8 w-8 rounded-full bg-accent/10">
-              <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+              <ArrowRight
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                strokeWidth={2.2}
+              />
             </span>
-          </a>
+          </motion.a>
         </div>
-      </section>
+      </motion.div>
 
     </PageLayout>
   )
