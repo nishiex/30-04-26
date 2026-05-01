@@ -164,7 +164,7 @@ function ChannelBeam() {
   return (
     <div
       ref={containerRef}
-      className="relative flex  w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-8"
+      className="relative flex  w-[800px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-8"
     >
       <div className="flex size-full  flex-col items-stretch justify-between gap-6">
         {/* Top row */}
