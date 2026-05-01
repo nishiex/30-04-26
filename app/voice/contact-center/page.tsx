@@ -213,15 +213,7 @@ export default function ContactCenterPage() {
 
 
 
-                <a
-                  href="https://www.twiching.ai/contact"
-                  className="inline-flex items-center gap-2 bg-white/10 backdrop-blur text-white border border-white/20 text-[15px] font-semibold font-mono px-6 py-2.5 rounded-full hover:bg-white/20 transition-colors"
-                >
-                  <PlayCircle className="h-4 w-4" strokeWidth={1.8} />
-                  Request a demo
-                </a>
-              </div>
-
+                
               {/* Trust pills */}
               <div className="flex flex-wrap gap-2">
                 {["Cloud-based", "Queue management", "Recording", "Supervisor tools", "CRM integrations"].map((item) => (
