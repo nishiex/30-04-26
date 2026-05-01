@@ -5,28 +5,31 @@ import { Faq } from "@/components/faq"
 import { Check, Minus, ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Twiching Pricing · Starter $7.99 | Professional $19.99 | Enterprise $29.99",
-  description: "Three plans. 14-day free trial. Starter from $7.99. Virtual numbers, voice, omnichannel, AI. Credit card required.",
+  title: "Twiching Pricing · Starter $7.99 | Professional $15.99 | Enterprise $25.99",
+  description: "Three plans. 14-day free trial. Starter from $7.99/mo (billed annually). Virtual numbers, voice, omnichannel, AI. Credit card required.",
 }
 
 const PLANS = [
   {
     name: "Starter",
     price: "$7.99",
+    monthlyPrice: "$12.99",
     period: "/user/mo",
+    billingNote: "billed annually · $12.99/mo monthly",
     best: "Freelancers, consultants, small teams",
     highlight: false,
     highlights: [
       "Unlimited US/Canada calling",
       "Unlimited business SMS & MMS",
+      "Mobile apps (iOS/Android)",
+      "AI Receptionist (25 min/mo free)",
       "Multi-level auto-attendant (IVR)",
-      "Voicemail-to-email + transcription",
-      "Business hours routing",
       "2FA + STIR/SHAKEN + HIPAA",
     ],
     features: {
       "Unlimited US/Canada calling": true,
       "Unlimited business SMS & MMS": true,
+      "Mobile apps (iOS/Android)": true,
       "Voicemail-to-email + transcription": true,
       "Multi-level auto-attendant (IVR)": true,
       "Call queues": true,
@@ -35,11 +38,11 @@ const PLANS = [
       "Business hours routing": true,
       "2FA + STIR/SHAKEN + HIPAA": true,
       "Email support": true,
+      "AI Receptionist": true,
       "Omnichannel (WhatsApp/IG/FB)": false,
       "CRM integrations": false,
       "Supervisor tools": false,
       "Call recording": false,
-      "AI Receptionist": false,
       "Auto Dialers": false,
       "SOC 2 audit": false,
       "Dedicated account manager": false,
@@ -47,57 +50,62 @@ const PLANS = [
   },
   {
     name: "Professional",
-    price: "$19.99",
+    price: "$15.99",
+    monthlyPrice: "$19.99",
     period: "/user/mo",
+    billingNote: "billed annually · $19.99/mo monthly",
     best: "Growing businesses",
     highlight: true,
     highlights: [
       "Everything in Starter",
+      "AI Receptionist (100 min/mo free)",
+      "Call recording (30-day retention)",
       "Omnichannel (WhatsApp/IG/FB)",
-      "CRM integrations",
-      "Supervisor tools",
-      "Mobile apps (iOS/Android)",
-      "Priority support",
+      "CRM integrations + Supervisor tools",
+      "SOC 2 Type II access",
     ],
     features: {
       "Unlimited US/Canada calling": true,
       "Unlimited business SMS & MMS": true,
+      "Mobile apps (iOS/Android)": true,
       "Voicemail-to-email + transcription": true,
       "Multi-level auto-attendant (IVR)": true,
       "Call queues": true,
-      "Mobile apps (iOS/Android)": true,
       "HD video meetings": true,
       "Call screening": true,
       "Business hours routing": true,
       "2FA + STIR/SHAKEN + HIPAA": true,
       "Email support": true,
+      "AI Receptionist": true,
       "Omnichannel (WhatsApp/IG/FB)": true,
       "CRM integrations": true,
       "Supervisor tools": true,
-      "Call recording": false,
-      "AI Receptionist": false,
-      "Auto Dialers": false,
-      "SOC 2 audit": false,
+      "Call recording": true,
+      "Auto Dialers": true,
+      "SOC 2 audit": true,
       "Dedicated account manager": false,
     },
   },
   {
     name: "Enterprise",
-    price: "$29.99",
+    price: "$25.99",
+    monthlyPrice: "$29.99",
     period: "/user/mo",
+    billingNote: "billed annually · $29.99/mo monthly",
     best: "Contact centers, large teams",
     highlight: false,
     highlights: [
       "Everything in Professional",
-      "Call recording",
-      "AI Receptionist",
-      "Auto Dialers",
-      "SOC 2 audit",
+      "AI Receptionist (300 min/mo free)",
+      "Advanced call recording (1-year retention)",
+      "Predictive & progressive auto dialers",
+      "Voice cloning for AI receptionist",
       "Dedicated account manager",
     ],
     features: {
       "Unlimited US/Canada calling": true,
       "Unlimited business SMS & MMS": true,
+      "Mobile apps (iOS/Android)": true,
       "Voicemail-to-email + transcription": true,
       "Multi-level auto-attendant (IVR)": true,
       "Call queues": true,
@@ -106,11 +114,11 @@ const PLANS = [
       "Business hours routing": true,
       "2FA + STIR/SHAKEN + HIPAA": true,
       "Email support": true,
+      "AI Receptionist": true,
       "Omnichannel (WhatsApp/IG/FB)": true,
       "CRM integrations": true,
       "Supervisor tools": true,
       "Call recording": true,
-      "AI Receptionist": true,
       "Auto Dialers": true,
       "SOC 2 audit": true,
       "Dedicated account manager": true,
@@ -121,20 +129,20 @@ const PLANS = [
 const FEATURE_ROWS = [
   "Unlimited US/Canada calling",
   "Unlimited business SMS & MMS",
+  "Mobile apps (iOS/Android)",
   "Voicemail-to-email + transcription",
   "Multi-level auto-attendant (IVR)",
   "Call queues",
-  "Mobile apps (iOS/Android)",
   "HD video meetings",
   "Call screening",
   "Business hours routing",
   "2FA + STIR/SHAKEN + HIPAA",
   "Email support",
+  "AI Receptionist",
   "Omnichannel (WhatsApp/IG/FB)",
   "CRM integrations",
   "Supervisor tools",
   "Call recording",
-  "AI Receptionist",
   "Auto Dialers",
   "SOC 2 audit",
   "Dedicated account manager",
@@ -154,7 +162,8 @@ const FAQS = [
   { q: "Is a credit card required?", a: "Yes. Card required at sign-up. No charges during the 14-day trial window. Auto-converts to paid plan after 14 days." },
   { q: "Can I cancel during the trial?", a: "Yes. Cancel anytime before trial ends — redirected to plans page with no charge." },
   { q: "Why can't I make external calls during the trial?", a: "Compliance keeps the platform compliant with carrier rules and protects your number reputation from day one. Activation takes minutes once verified." },
-  { q: "What is the Starter plan's calling limit?", a: "Starter includes 5,000 domestic calling minutes/month. Overage at published rates. Professional and Enterprise include unlimited domestic calling." },
+  { q: "What does 'unlimited US/Canada calling' mean?", a: "All paid plans include unlimited domestic US/Canada calling with a fair-use policy (standard industry cap applies). No per-minute charges for normal business use." },
+  { q: "What AI Receptionist minutes are included?", a: "Starter includes 25 free AI Receptionist minutes/mo, Professional 100 min/mo, and Enterprise 300 min/mo — all pooled per account. Overage at $0.15/min." },
   { q: "Do you offer custom pricing?", a: "Yes. Contact us for high-volume or enterprise arrangements beyond the standard plans." },
 ]
 
@@ -170,7 +179,7 @@ export default function PricingPage() {
           <p className="mt-4 text-[18px] font-mono text-gray-500 leading-relaxed">
             Three plans. One free trial. Everything your business needs to communicate professionally.
           </p>
-          <TrustBar items={["Starter $7.99", "Professional $19.99", "Enterprise $29.99", "14-day trial", "No setup fees"]} />
+          <TrustBar items={["Starter $7.99/mo", "Professional $15.99/mo", "Enterprise $25.99/mo", "14-day trial", "No setup fees"]} />
         </div>
       </section>
 
@@ -196,6 +205,7 @@ export default function PricingPage() {
                 <span className="font-serif text-[36px] font-bold text-gray-900 leading-none">{plan.price}</span>
                 <span className="font-mono text-[11px] text-gray-400 mb-1.5">{plan.period}</span>
               </div>
+              <p className="font-mono text-[10px] text-gray-400 mb-1">{plan.billingNote}</p>
               <p className="font-mono font-bold text-[15px] text-gray-800 mb-4">{plan.name}</p>
 
               <ul className="space-y-1.5 flex-1 mb-5">
@@ -222,6 +232,9 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+        <p className="text-center font-mono text-[11px] text-gray-400 mt-4">
+          All prices shown are billed annually. Monthly billing available at rates shown on each plan.
+        </p>
       </section>
 
       {/* Comparison table */}
@@ -235,6 +248,7 @@ export default function PricingPage() {
                 {PLANS.map((p) => (
                   <th key={p.name} className={`text-center px-5 py-4 text-[12px] font-bold text-gray-800 ${p.highlight ? "text-accent" : ""}`}>
                     {p.name}
+                    <span className="block font-normal text-[10px] text-gray-400">{p.price}/mo</span>
                   </th>
                 ))}
               </tr>
@@ -257,6 +271,9 @@ export default function PricingPage() {
             </tbody>
           </table>
         </div>
+        <p className="font-mono text-[11px] text-gray-400 mt-3 text-center">
+          AI Receptionist free minutes: Starter 25/mo · Professional 100/mo · Enterprise 300/mo (pooled per account). Call recording: Professional basic 30-day · Enterprise advanced 1-year.
+        </p>
       </section>
 
       {/* Trial details */}
