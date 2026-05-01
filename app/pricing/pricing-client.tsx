@@ -225,7 +225,7 @@ function BillingToggle({
         <motion.div
           className="absolute top-1 bottom-1 rounded-full bg-white shadow-sm"
           animate={{
-            left: isAnnual ? "calc(50% + 2px)" : "4px",
+            left: isAnnual ? "calc(40% + 2px)" : "4px",
             right: isAnnual ? "4px" : "calc(50% + 2px)",
           }}
           transition={{ type: "spring", stiffness: 460, damping: 34 }}
