@@ -376,19 +376,7 @@ export default function ContactCenterPage() {
                 <p className="text-[14px] text-gray-400 font-mono leading-relaxed mb-8">
                   Voice, SMS, WhatsApp, Instagram, email, and web chat handled in one unified inbox. Agents stop switching tabs and start serving customers.
                 </p>
-                <div className="flex flex-col gap-3">
-                  {CHANNELS.map(({ Icon, label, desc, color, bg }) => (
-                    <div key={label} className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg ${bg} grid place-items-center shrink-0`}>
-                        <Icon className={`h-3.5 w-3.5 ${color}`} strokeWidth={1.8} />
-                      </div>
-                      <div>
-                        <span className="text-[12px] font-semibold font-mono text-white">{label}</span>
-                        <span className="text-[11px] text-gray-500 font-mono ml-2">{desc}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                
               </div>
 
               {/* Right: animated beam */}
