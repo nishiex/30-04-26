@@ -185,7 +185,16 @@ export default function ContactCenterPage() {
               </p>
 
               {/* CTAs */}
-              <div className="flex flex-wrap  gap-3 mb-12">
+              <div className="flex flex-wrap items-center gap-3 mb-12">
+                <a
+                  href="https://www.twiching.ai/pricing"
+                  className="group inline-flex items-center gap-2 bg-accent text-white text-[15px] font-semibold font-mono pl-6 pr-2 py-2.5 rounded-full hover:bg-blue-700 transition-colors shadow-[0_8px_24px_-6px_rgba(37,99,235,0.5)]"
+                >
+                  
+                  <span className="grid place-items-center h-8 w-8 rounded-full bg-white/15 transition-transform group-hover:translate-x-0.5">
+                    <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+                  </span>
+                </a>
 <div className="hero-cta flex justify-center mb-8">
           <motion.a
             href="#"
