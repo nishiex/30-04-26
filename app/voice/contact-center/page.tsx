@@ -186,34 +186,32 @@ export default function ContactCenterPage() {
 
               {/* CTAs */}
               <div className="flex flex-wrap items-center gap-3 mb-12">
-                <a
+                <motion.a
                   href="https://www.twiching.ai/pricing"
-                  className="group inline-flex items-center gap-2 bg-accent text-white text-[15px] font-semibold font-mono pl-6 pr-2 py-2.5 rounded-full hover:bg-blue-700 transition-colors shadow-[0_8px_24px_-6px_rgba(37,99,235,0.5)]"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  className="group inline-flex items-center gap-2 bg-accent text-white text-[15px] font-semibold font-mono pl-7 pr-3 py-2 rounded-full hover:bg-blue-700 transition-colors shadow-[0_8px_24px_-6px_rgba(37,99,235,0.5)]"
                 >
-                  
-                  <span className="grid place-items-center h-8 w-8 rounded-full bg-white/15 transition-transform group-hover:translate-x-0.5">
+                  See Pricing
+                  <span className="grid place-items-center h-8 w-8 rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition-transform group-hover:translate-x-0.5">
                     <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
                   </span>
-                </a>
-<div className="hero-cta flex justify-center mb-8">
-          <motion.a
-            href="#"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="group inline-flex items-center gap-2 bg-accent text-white text-[15px] font-semibold font-mono pl-7 pr-3 py-2 rounded-full hover:bg-[color:var(--accent-dark)] shadow-[0_8px_24px_-6px_rgba(37,99,235,0.45)]"
-          >
-            Request a Demo
-            <span className="grid place-items-center h-8 w-8 rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition-transform group-hover:translate-x-0.5">
-              <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
-            </span>
-          </motion.a>
-        </div>
+                </motion.a>
+                <motion.a
+                  href="https://www.twiching.ai/contact"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  className="group inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-[15px] font-semibold font-mono pl-7 pr-3 py-2 rounded-full hover:bg-white/20 transition-colors"
+                >
+                  Request a Demo
+                  <span className="grid place-items-center h-8 w-8 rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition-transform group-hover:translate-x-0.5">
+                    <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+                  </span>
+                </motion.a>
+              </div>
 
-
-
-
-                
               {/* Trust pills */}
               <div className="flex flex-wrap gap-2">
                 {["Cloud-based", "Queue management", "Recording", "Supervisor tools", "CRM integrations"].map((item) => (
