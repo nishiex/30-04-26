@@ -59,7 +59,7 @@ export default function RealEstatePage() {
         </div>
       </section>
 
-      <Faq items={FAQS} heading="Real estate communications FAQ" />
+      <Faq items={FAQS} heading="Real estate communications FAQ" variant="tinted" />
 
       <RelatedCards
         heading="Explore more solutions"

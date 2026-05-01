@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { TrustBar, SectionHeading } from "@/components/page-parts"
-import { Check, Minus, ArrowRight, ChevronDown } from "lucide-react"
+import { Faq } from "@/components/faq"
+import { Check, Minus, ArrowRight } from "lucide-react"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -301,65 +302,10 @@ function PriceDisplay({ plan, isAnnual }: { plan: Plan; isAnnual: boolean }) {
   )
 }
 
-function FaqItem({
-  item,
-  index,
-  isOpen,
-  onToggle,
-}: {
-  item: { q: string; a: string }
-  index: number
-  isOpen: boolean
-  onToggle: () => void
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.06, duration: 0.42 }}
-      className="border border-gray-100 rounded-xl overflow-hidden"
-    >
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between px-5 py-4 text-left bg-white hover:bg-gray-50/60 transition-colors"
-      >
-        <span className="font-mono font-bold text-[13px] text-gray-900 pr-4">{item.q}</span>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 24 }}
-          className="flex-shrink-0 text-gray-400"
-        >
-          <ChevronDown className="h-4 w-4" />
-        </motion.span>
-      </button>
-
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            key="content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{
-              height: { duration: 0.32, ease: [0.04, 0.62, 0.23, 0.98] },
-              opacity: { duration: 0.22 },
-            }}
-            className="overflow-hidden border-t border-gray-50"
-          >
-            <p className="px-5 py-4 font-mono text-[13px] text-gray-600 leading-relaxed">{item.a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  )
-}
-
 // ── Main export ───────────────────────────────────────────────────────────────
 
 export default function PricingClient() {
   const [isAnnual, setIsAnnual] = useState(true)
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const tableBodyRef = useRef<HTMLTableSectionElement>(null)
   const glowLayerRef = useRef<HTMLDivElement>(null)
@@ -672,21 +618,8 @@ export default function PricingClient() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
-        <SectionHeading eyebrow="FAQ" h2="Common questions" />
-        <div className="max-w-[720px] mx-auto space-y-2 mt-8">
-          {FAQS.map((item, i) => (
-            <FaqItem
-              key={i}
-              item={item}
-              index={i}
-              isOpen={openFaq === i}
-              onToggle={() => setOpenFaq(openFaq === i ? null : i)}
-            />
-          ))}
-        </div>
-      </section>
+      {/* FAQ — matches home page style */}
+      <Faq items={FAQS} heading="Pricing questions, answered." />
 
       {/* FINAL CTA */}
       <motion.div

@@ -34,9 +34,11 @@ const defaultFaqs: FaqItem[] = [
 interface FaqProps {
   items?: FaqItem[]
   heading?: string
+  /** "default" = white card (home page style), "tinted" = slate-50 bg (real-estate style) */
+  variant?: "default" | "tinted"
 }
 
-export function Faq({ items = defaultFaqs, heading = "Questions about Twiching, answered." }: FaqProps) {
+export function Faq({ items = defaultFaqs, heading = "Questions about Twiching, answered.", variant = "default" }: FaqProps) {
   const [open, setOpen] = useState<number | null>(0)
   const faqs = items
 
@@ -50,8 +52,14 @@ export function Faq({ items = defaultFaqs, heading = "Questions about Twiching, 
     })),
   }
 
+  const isTinted = variant === "tinted"
+
   return (
-    <section id="s-faq" data-sec="faq" className="py-14 md:py-20 px-[5%]">
+    <section
+      id="s-faq"
+      data-sec="faq"
+      className={`py-14 md:py-20 px-[5%] ${isTinted ? "bg-slate-50" : ""}`}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
@@ -62,7 +70,7 @@ export function Faq({ items = defaultFaqs, heading = "Questions about Twiching, 
           {heading}
         </h2>
 
-        <div className="rounded-3xl ring-1 ring-gray-200/70 bg-white/60 backdrop-blur divide-y divide-gray-100">
+        <div className={`rounded-3xl divide-y ${isTinted ? "ring-1 ring-gray-200 bg-white shadow-sm" : "ring-1 ring-gray-200/70 bg-white/60 backdrop-blur divide-gray-100"}`}>
           {faqs.map((f, i) => {
             const isOpen = open === i
             return (
@@ -74,7 +82,11 @@ export function Faq({ items = defaultFaqs, heading = "Questions about Twiching, 
                   <span className="font-serif text-lg">{f.q}</span>
                   <span
                     className={`faq-icon grid place-items-center h-8 w-8 rounded-full transition-colors ${
-                      isOpen ? "bg-accent text-white" : "bg-blue-50 text-accent"
+                      isOpen
+                        ? "bg-accent text-white"
+                        : isTinted
+                          ? "bg-slate-100 text-accent"
+                          : "bg-blue-50 text-accent"
                     }`}
                   >
                     <Plus className="h-4 w-4" strokeWidth={2.2} />
