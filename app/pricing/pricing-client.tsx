@@ -262,7 +262,7 @@ function PriceDisplay({ plan, isAnnual }: { plan: Plan; isAnnual: boolean }) {
   return (
     <div className="mb-2">
       <div className="flex items-end gap-1 mb-0.5">
-        <div className="relative overflow-hidden" style={{ height: 44, minWidth: 96 }}>
+        <div className="relative overflow-hidden" style={{ height: 44, minWidth: 120 }}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
               key={price}
@@ -270,7 +270,7 @@ function PriceDisplay({ plan, isAnnual }: { plan: Plan; isAnnual: boolean }) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: isAnnual ? 36 : -36, opacity: 0 }}
               transition={{ type: "spring", stiffness: 360, damping: 30 }}
-              className="font-serif text-[36px] font-bold text-gray-900 leading-none absolute bottom-0 left-0"
+              className="font-serif text-[36px] font-bold text-gray-900 leading-none absolute bottom-0 left-0   "
             >
               {price}
             </motion.span>
