@@ -203,7 +203,7 @@ export default function ContactCenterPage() {
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="group inline-flex items-center gap-2 bg-accent text-white text-[15px] font-semibold font-mono pl-7 pr-3 py-2 rounded-full hover:bg-[color:var(--accent-dark)] shadow-[0_8px_24px_-6px_rgba(37,99,235,0.45)]"
           >
-            See pricing
+            Request a Demo
             <span className="grid place-items-center h-8 w-8 rounded-full bg-white/15 ring-1 ring-inset ring-white/25 transition-transform group-hover:translate-x-0.5">
               <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
             </span>
