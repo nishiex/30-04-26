@@ -164,102 +164,95 @@ function ChannelBeam() {
   return (
     <div
       ref={containerRef}
-      className="relative flex  w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-8"
+      className="relative mx-auto flex h-[360px] w-full max-w-[480px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/3 px-10 py-8"
     >
-      <div className="flex size-full max-h-[260px] flex-col items-stretch justify-between gap-6">
-        {/* Top row */}
-        <div className="flex flex-row items-center justify-between">
-          <BeamCircle ref={whatsappRef} label="WhatsApp">
-            {/* WhatsApp */}
-            <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#25D366" />
-              <path d="M22.5 9.5A8.9 8.9 0 0 0 16 7a8.96 8.96 0 0 0-7.74 13.46L7 25l4.7-1.23A8.96 8.96 0 0 0 25 16a8.9 8.9 0 0 0-2.5-6.5zm-6.5 13.7a7.43 7.43 0 0 1-3.79-1.04l-.27-.16-2.79.73.74-2.72-.18-.28A7.45 7.45 0 1 1 16 23.2zm4.08-5.57c-.22-.11-1.32-.65-1.52-.72-.2-.08-.35-.11-.5.11-.15.22-.58.72-.71.87-.13.15-.26.17-.48.06a6.06 6.06 0 0 1-1.79-1.1 6.7 6.7 0 0 1-1.24-1.54c-.13-.22 0-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.2-.68-1.65-.18-.43-.37-.37-.5-.38h-.43c-.15 0-.39.06-.6.28-.2.22-.78.76-.78 1.86s.8 2.16.91 2.31c.11.15 1.58 2.41 3.83 3.38.54.23.96.37 1.28.47.54.17 1.03.15 1.41.09.43-.07 1.32-.54 1.51-1.06.19-.52.19-.97.13-1.06-.06-.09-.21-.15-.43-.26z" fill="white"/>
-            </svg>
-          </BeamCircle>
-          <BeamCircle ref={emailRef} label="Email">
-            {/* Email */}
-            <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#EA4335" />
-              <path d="M8 11.5A1.5 1.5 0 0 1 9.5 10h13A1.5 1.5 0 0 1 24 11.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 8 20.5v-9zm2 .5v.8l6 4 6-4v-.8l-6 4-6-4zm0 2.2V20h12v-5.8l-6 4-6-4z" fill="white"/>
-            </svg>
-          </BeamCircle>
-        </div>
+      {/* 3-column × 3-row grid: left col | center col | right col */}
+      <div className="grid w-full grid-cols-3 grid-rows-3 items-center justify-items-center gap-y-6">
+        {/* Row 1 */}
+        <BeamCircle ref={whatsappRef} label="WhatsApp">
+          <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="16" fill="#25D366" />
+            <path d="M22.5 9.5A8.9 8.9 0 0 0 16 7a8.96 8.96 0 0 0-7.74 13.46L7 25l4.7-1.23A8.96 8.96 0 0 0 25 16a8.9 8.9 0 0 0-2.5-6.5zm-6.5 13.7a7.43 7.43 0 0 1-3.79-1.04l-.27-.16-2.79.73.74-2.72-.18-.28A7.45 7.45 0 1 1 16 23.2zm4.08-5.57c-.22-.11-1.32-.65-1.52-.72-.2-.08-.35-.11-.5.11-.15.22-.58.72-.71.87-.13.15-.26.17-.48.06a6.06 6.06 0 0 1-1.79-1.1 6.7 6.7 0 0 1-1.24-1.54c-.13-.22 0-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.2-.68-1.65-.18-.43-.37-.37-.5-.38h-.43c-.15 0-.39.06-.6.28-.2.22-.78.76-.78 1.86s.8 2.16.91 2.31c.11.15 1.58 2.41 3.83 3.38.54.23.96.37 1.28.47.54.17 1.03.15 1.41.09.43-.07 1.32-.54 1.51-1.06.19-.52.19-.97.13-1.06-.06-.09-.21-.15-.43-.26z" fill="white"/>
+          </svg>
+        </BeamCircle>
+        {/* center top — empty spacer */}
+        <div />
+        <BeamCircle ref={emailRef} label="Email">
+          <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="16" fill="#EA4335" />
+            <path d="M8 11.5A1.5 1.5 0 0 1 9.5 10h13A1.5 1.5 0 0 1 24 11.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 8 20.5v-9zm2 .5v.8l6 4 6-4v-.8l-6 4-6-4zm0 2.2V20h12v-5.8l-6 4-6-4z" fill="white"/>
+          </svg>
+        </BeamCircle>
 
-        {/* Middle row */}
-        <div className="flex flex-row items-center justify-between">
-          <BeamCircle ref={instagramRef} label="Instagram">
-            {/* Instagram */}
-            <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
-                  <stop offset="0%" stopColor="#ffd600"/>
-                  <stop offset="30%" stopColor="#ff6930"/>
-                  <stop offset="60%" stopColor="#fe3b92"/>
-                  <stop offset="100%" stopColor="#6e3fbe"/>
-                </radialGradient>
-              </defs>
-              <circle cx="16" cy="16" r="16" fill="url(#ig-grad)"/>
-              <rect x="10" y="10" width="12" height="12" rx="3.5" stroke="white" strokeWidth="1.6" fill="none"/>
-              <circle cx="16" cy="16" r="3" stroke="white" strokeWidth="1.6" fill="none"/>
-              <circle cx="20.2" cy="11.8" r="0.9" fill="white"/>
-            </svg>
-          </BeamCircle>
+        {/* Row 2 */}
+        <BeamCircle ref={instagramRef} label="Instagram">
+          <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+                <stop offset="0%" stopColor="#ffd600"/>
+                <stop offset="30%" stopColor="#ff6930"/>
+                <stop offset="60%" stopColor="#fe3b92"/>
+                <stop offset="100%" stopColor="#6e3fbe"/>
+              </radialGradient>
+            </defs>
+            <circle cx="16" cy="16" r="16" fill="url(#ig-grad)"/>
+            <rect x="10" y="10" width="12" height="12" rx="3.5" stroke="white" strokeWidth="1.6" fill="none"/>
+            <circle cx="16" cy="16" r="3" stroke="white" strokeWidth="1.6" fill="none"/>
+            <circle cx="20.2" cy="11.8" r="0.9" fill="white"/>
+          </svg>
+        </BeamCircle>
 
-          {/* CENTER HUB */}
-          <div className="flex flex-col items-center gap-1.5">
-            <div
-              ref={centerRef}
-              className="z-10 flex size-16 items-center justify-center rounded-full border border-blue-500/40 bg-blue-600/20 shadow-[0_0_30px_-5px_rgba(37,99,235,0.6)] backdrop-blur-sm ring-2 ring-blue-500/20"
-            >
-              <svg viewBox="0 0 32 32" className="size-8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="16" cy="16" r="16" fill="#2563EB" fillOpacity="0.2"/>
-                <path d="M10 20l2-4 4 2 4-2 2 4" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="16" cy="13" r="3" stroke="#93c5fd" strokeWidth="1.5" fill="none"/>
-              </svg>
-            </div>
-            <span className="text-[10px] font-mono font-bold text-blue-400 tracking-widest uppercase">AI Hub</span>
+        {/* CENTER HUB */}
+        <div className="flex flex-col items-center gap-1.5">
+          <div
+            ref={centerRef}
+            className="z-10 flex size-16 items-center justify-center rounded-full border border-blue-500/40 bg-blue-600/20 shadow-[0_0_30px_-5px_rgba(37,99,235,0.6)] backdrop-blur-sm ring-2 ring-blue-500/20"
+          >
+            <svg viewBox="0 0 32 32" className="size-8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="16" fill="#2563EB" fillOpacity="0.2"/>
+              <path d="M10 20l2-4 4 2 4-2 2 4" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="16" cy="13" r="3" stroke="#93c5fd" strokeWidth="1.5" fill="none"/>
+            </svg>
           </div>
-
-          <BeamCircle ref={voiceRef} label="Voice">
-            {/* Voice / Phone */}
-            <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#3B82F6" />
-              <path d="M12.5 10a1 1 0 0 1 .94.65l1.07 2.85a1 1 0 0 1-.23 1.06l-1.1 1.1a7.07 7.07 0 0 0 3.16 3.16l1.1-1.1a1 1 0 0 1 1.06-.23l2.85 1.07A1 1 0 0 1 22 19.5v2a1 1 0 0 1-1.05 1C12.07 22 10 13.93 10 12.05A1 1 0 0 1 11 11l1.5-1z" fill="white"/>
-            </svg>
-          </BeamCircle>
+          <span className="text-[10px] font-mono font-bold text-blue-400 tracking-widest uppercase">AI Hub</span>
         </div>
 
-        {/* Bottom row */}
-        <div className="flex flex-row items-center justify-between">
-          <BeamCircle ref={smsRef} label="SMS">
-            {/* SMS */}
-            <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#10B981" />
-              <path d="M9 10h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H13l-4 3v-3H9a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1z" fill="white"/>
-              <circle cx="13" cy="14.5" r="1" fill="#10B981"/>
-              <circle cx="16" cy="14.5" r="1" fill="#10B981"/>
-              <circle cx="19" cy="14.5" r="1" fill="#10B981"/>
-            </svg>
-          </BeamCircle>
-          <BeamCircle ref={webchatRef} label="Web Chat">
-            {/* Web Chat */}
-            <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#8B5CF6" />
-              <circle cx="16" cy="16" r="7" stroke="white" strokeWidth="1.4" fill="none"/>
-              <path d="M9 16h14M16 9c-2.5 3-2.5 11 0 14M16 9c2.5 3 2.5 11 0 14" stroke="white" strokeWidth="1.4"/>
-            </svg>
-          </BeamCircle>
-        </div>
+        <BeamCircle ref={voiceRef} label="Voice">
+          <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="16" fill="#3B82F6" />
+            <path d="M12.5 10a1 1 0 0 1 .94.65l1.07 2.85a1 1 0 0 1-.23 1.06l-1.1 1.1a7.07 7.07 0 0 0 3.16 3.16l1.1-1.1a1 1 0 0 1 1.06-.23l2.85 1.07A1 1 0 0 1 22 19.5v2a1 1 0 0 1-1.05 1C12.07 22 10 13.93 10 12.05A1 1 0 0 1 11 11l1.5-1z" fill="white"/>
+          </svg>
+        </BeamCircle>
+
+        {/* Row 3 */}
+        <BeamCircle ref={smsRef} label="SMS">
+          <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="16" fill="#10B981" />
+            <path d="M9 10h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H13l-4 3v-3H9a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1z" fill="white"/>
+            <circle cx="13" cy="14.5" r="1" fill="#10B981"/>
+            <circle cx="16" cy="14.5" r="1" fill="#10B981"/>
+            <circle cx="19" cy="14.5" r="1" fill="#10B981"/>
+          </svg>
+        </BeamCircle>
+        {/* center bottom — empty spacer */}
+        <div />
+        <BeamCircle ref={webchatRef} label="Web Chat">
+          <svg viewBox="0 0 32 32" className="size-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="16" fill="#8B5CF6" />
+            <circle cx="16" cy="16" r="7" stroke="white" strokeWidth="1.4" fill="none"/>
+            <path d="M9 16h14M16 9c-2.5 3-2.5 11 0 14M16 9c2.5 3 2.5 11 0 14" stroke="white" strokeWidth="1.4"/>
+          </svg>
+        </BeamCircle>
       </div>
 
-      {/* Beams: left side → center */}
-      <AnimatedBeam containerRef={containerRef} fromRef={whatsappRef} toRef={centerRef} curvature={-40} gradientStartColor="#25D366" gradientStopColor="#60a5fa" />
-      <AnimatedBeam containerRef={containerRef} fromRef={instagramRef} toRef={centerRef} gradientStartColor="#fe3b92" gradientStopColor="#60a5fa" />
-      <AnimatedBeam containerRef={containerRef} fromRef={smsRef} toRef={centerRef} curvature={40} gradientStartColor="#10B981" gradientStopColor="#60a5fa" />
-      {/* Beams: right side → center (reverse) */}
-      <AnimatedBeam containerRef={containerRef} fromRef={emailRef} toRef={centerRef} curvature={-40} reverse gradientStartColor="#EA4335" gradientStopColor="#60a5fa" />
-      <AnimatedBeam containerRef={containerRef} fromRef={voiceRef} toRef={centerRef} reverse gradientStartColor="#3B82F6" gradientStopColor="#60a5fa" />
-      <AnimatedBeam containerRef={containerRef} fromRef={webchatRef} toRef={centerRef} curvature={40} reverse gradientStartColor="#8B5CF6" gradientStopColor="#60a5fa" />
+      {/* Beams: left col → center */}
+      <AnimatedBeam containerRef={containerRef} fromRef={whatsappRef} toRef={centerRef} curvature={-30} gradientStartColor="#25D366" gradientStopColor="#60a5fa" />
+      <AnimatedBeam containerRef={containerRef} fromRef={instagramRef} toRef={centerRef} curvature={0} gradientStartColor="#fe3b92" gradientStopColor="#60a5fa" />
+      <AnimatedBeam containerRef={containerRef} fromRef={smsRef} toRef={centerRef} curvature={30} gradientStartColor="#10B981" gradientStopColor="#60a5fa" />
+      {/* Beams: right col → center (reverse) */}
+      <AnimatedBeam containerRef={containerRef} fromRef={emailRef} toRef={centerRef} curvature={-30} reverse gradientStartColor="#EA4335" gradientStopColor="#60a5fa" />
+      <AnimatedBeam containerRef={containerRef} fromRef={voiceRef} toRef={centerRef} curvature={0} reverse gradientStartColor="#3B82F6" gradientStopColor="#60a5fa" />
+      <AnimatedBeam containerRef={containerRef} fromRef={webchatRef} toRef={centerRef} curvature={30} reverse gradientStartColor="#8B5CF6" gradientStopColor="#60a5fa" />
     </div>
   )
 }
