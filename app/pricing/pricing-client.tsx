@@ -211,48 +211,6 @@ const cardVariants = {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function BillingToggle({ isAnnual, onToggle }: { isAnnual: boolean; onToggle: () => void }) {
-  return (
-    <div className="flex items-center justify-center gap-3 mt-7 select-none">
-      <span
-        onClick={() => isAnnual && onToggle()}
-        className={`font-mono text-[13px] cursor-pointer transition-colors duration-200 ${!isAnnual ? "text-gray-900 font-bold" : "text-gray-400"}`}
-      >
-        Monthly
-      </span>
-
-      <button
-        onClick={onToggle}
-        role="switch"
-        aria-checked={isAnnual}
-        aria-label="Toggle annual billing"
-        className="relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-        style={{ backgroundColor: isAnnual ? "#2563eb" : "#d1d5db" }}
-      >
-        <motion.span
-          className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm block"
-          animate={{ x: isAnnual ? 20 : 0 }}
-          transition={{ type: "spring", stiffness: 520, damping: 32 }}
-        />
-      </button>
-
-      <span
-        onClick={() => !isAnnual && onToggle()}
-        className={`font-mono text-[13px] cursor-pointer flex items-center gap-1.5 transition-colors duration-200 ${isAnnual ? "text-gray-900 font-bold" : "text-gray-400"}`}
-      >
-        Annual
-        <motion.span
-          animate={{ opacity: isAnnual ? 1 : 0.4, scale: isAnnual ? 1 : 0.85 }}
-          transition={{ duration: 0.25 }}
-          className="text-[10px] bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded-full leading-none"
-        >
-          Save 20%
-        </motion.span>
-      </span>
-    </div>
-  )
-}
-
 function BillingToggle({
   isAnnual,
   onToggle,
